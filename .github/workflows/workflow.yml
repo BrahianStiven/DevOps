@@ -1,9 +1,10 @@
 name: hello world
-on: [workflow_dispatch]
+on: [push]
 jobs:
   hello_world:
     runs-on: ubuntu-latest
     steps:
+
     - name: Clonar el repositorio
       uses: actions/checkout@v3
 
