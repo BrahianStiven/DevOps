@@ -1,31 +1,27 @@
-name: build image
-on:
-  push:
-    branches: [ web ]
-
-permissions:
-  contents: read
-  packages: write
-
+name: hello world
+on: [push]
 jobs:
-  build: 
+  hello_world:
     runs-on: ubuntu-latest
-
     steps:
 
-      - name: Checkout del codigo
-        uses: actions/checkout@v5
+    - name: Clonar el repositorio
+      uses: actions/checkout@v3
 
-      - name: Login a github packages
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          usarname: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+    - run: python3 main.py
 
-      - name: Construir y publicar la imagen docker 
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/{{ github.repository_owner }}/web_app:latest
+    - name: crear clave ssh
+      env:
+        ssh_key: $ {{ secrets.SSh_KEY}}
+      run:
+        echo "$ssh_key" > key.pem
+        chmod 600 key.pem
+    
+    - name: ssh connection
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        script: sudo docker run -d --name=grafanax -p 3001:3000 grafana/grafana
