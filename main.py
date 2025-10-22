@@ -4,8 +4,8 @@ app = Flask(__name__)
 
 @app.route('/suma', methods=['GET'])
 def suma():
-    a = int(request.arg.get('a',0))
-    b = int(request.arg.get('b',0))
+    a = int(request.args.get('a',0))
+    b = int(request.args.get('b',0))
     result = a + b
     return jsonify({'resultado': result})
 
